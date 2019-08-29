@@ -4,6 +4,14 @@ Upon finish the script writes a one-line log to log named as "partner_activities
 
 The script can be used to check cloud activity for particular user in specified time duration.
 
+#prerequisite
+Before running the script make sure to install Google Cloud SDK.
+This script needs to import logging library. To install logging library, run:
+            pip install google-cloud-logging 
+
+#Download script
+curl -OL https://raw.githubusercontent.com/minzhuogoogle/gke_lab_monitor/master/lab_mon.py
+
 # Usage Sample
 mzhuo@minzhuo2:~/tmp$ ./lab_mon.py  cloudaudit.googleapis.com%2Factivity  gkeoplabs-hammerspace-1 hammerspace-1@csppartnerlabs.com  7 
 Filter used to retrieve log: timestamp>="2019-08-22T00:00:00Z" AND protoPayload.authenticationInfo.principalEmail:hammerspace-1@csppartnerlabs.com
@@ -20,4 +28,5 @@ Listing entries for logger partner_activities_check:
 * 2019-08-29T21:41:07.811768+00:00: For the last 7 days found 0 of log for hammerspace-1@csppartnerlabs.com in the project gkeoplabs-hammerspace-1.
 * 2019-08-29T21:42:55.449421+00:00: WARNING: For the last 7 days no log  found for hammerspace-1@csppartnerlabs.com in the project gkeoplabs-hammerspace-1.
 * 2019-08-29T22:08:05.349760+00:00: WARNING: For the last 7 days no log  found for hammerspace-1@csppartnerlabs.com in the project gkeoplabs-hammerspace-1.
-mzhuo@minzhuo2:~/tmp$ 
+
+
