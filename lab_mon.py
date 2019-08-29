@@ -83,7 +83,6 @@ def list_entries(logger_name, project, user, window):
     write_logger_name = "partner_activities_check"
     if not logger_name == write_logger_name:
         write_entry(write_logger_name, projectlist, count, user, window)
-# [END logging_list_log_entries]
 
 
 if __name__ == '__main__':
