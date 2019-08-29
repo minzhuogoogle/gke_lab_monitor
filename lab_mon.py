@@ -14,11 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""This application demonstrates how to perform basic operations on logs and
-log entries with Stackdriver Logging.
-
-For more information, see the README.md under /logging and the
-documentation at https://cloud.google.com/logging/docs.
+"""The script is used to check cloud activities log for 
+specified user.
 """
 
 import argparse
@@ -32,7 +29,7 @@ from google.cloud import logging
 
 PST_ZONE = timezone('US/Pacific')
 
-# [START logging_write_log_entry]
+
 def write_entry(logger_name, project, number, user, window):
     """Writes log entries to the given logger."""
     logging_client = logging.Client()
@@ -52,10 +49,8 @@ def write_entry(logger_name, project, number, user, window):
 
 
     print('Wrote logs to {}.'.format(logger.name))
-# [END logging_write_log_entry]
 
 
-# [START logging_list_log_entries]
 def list_entries(logger_name, project, user, window):
     """Lists the most recent entries for a given logger."""
     logging_client = logging.Client()
@@ -89,21 +84,6 @@ def list_entries(logger_name, project, user, window):
     if not logger_name == write_logger_name:
         write_entry(write_logger_name, projectlist, count, user, window)
 # [END logging_list_log_entries]
-
-
-# [START logging_delete_log]
-def delete_logger(logger_name, project, user):
-    """Deletes a logger and all its entries.
-
-    Note that a deletion can take several minutes to take effect.
-    """
-    logging_client = logging.Client()
-    logger = logging_client.logger(logger_name)
-
-    logger.delete()
-
-    print('Deleted all logging entries for {}'.format(logger.name))
-# [END logging_delete_log]
 
 
 if __name__ == '__main__':
