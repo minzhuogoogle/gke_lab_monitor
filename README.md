@@ -1,10 +1,10 @@
-# gke_lab_monitor
+# Description
 This script checks log in log named as "cloudaudit.googleapis.com%2Factivity" for particular user for the number of past days.
 Upon finish the script writes a one-line log to log named as "partner_activities_check" regarding how many logs found. 
 
 The script can be used to check cloud activity for particular user in specified time duration.
 
-# prerequisite
+# Prerequisite
 Before running the script make sure to install Google Cloud SDK.
 This script needs to import logging library. To install logging library, run:
             pip install google-cloud-logging 
