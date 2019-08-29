@@ -120,17 +120,6 @@ if __name__ == '__main__':
     parser.add_argument(
         'window', help='number of days to inspect logs', default=None)
 
-    subparsers = parser.add_subparsers(dest='command')
-    subparsers.add_parser('list', help=list_entries.__doc__)
-    subparsers.add_parser('write', help=write_entry.__doc__)
-    subparsers.add_parser('delete', help=delete_logger.__doc__)
-
-
     args = parser.parse_args()
 
-    if args.command == 'list':
-      list_entries(args.logger_name, args.project, args.user, int(args.window))
-    elif args.command == 'write':
-        write_entry(args.logger_name, args.project, args.user)
-    elif args.command == 'delete':
-        delete_logger(args.logger_name, args.project, args.user)
+    list_entries(args.logger_name, args.project, args.user, int(args.window))
