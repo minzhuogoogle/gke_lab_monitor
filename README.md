@@ -5,20 +5,13 @@ Upon finish the script writes a one-line log to log named as "partner_activities
 The script can be used to check cloud activity for particular user in specified time duration.
 
 # Usage Sample
-
-1. First, retrieve log
-mzhuo@minzhuo2:~/tmp$ ./lab_mon.py  cloudaudit.googleapis.com%2Factivity  gkeoplabs-hammerspace-1 hammerspace-1@csppartnerlabs.com  7 list  
-/usr/local/google/home/mzhuo/.local/lib/python2.7/site-packages/google/auth/_default.py:66: UserWarning: Your application has authenticated using end user credentials from Google Cloud SDK. We recommend that most server applications use service accounts instead. If your application continues to use end user credentials from Cloud SDK, you might receive a "quota exceeded" or "API not enabled" error. For more information about service accounts, see https://cloud.google.com/docs/authentication/
-  warnings.warn(_CLOUD_SDK_CREDENTIALS_WARNING)
+mzhuo@minzhuo2:~/tmp$ ./lab_mon.py  cloudaudit.googleapis.com%2Factivity  gkeoplabs-hammerspace-1 hammerspace-1@csppartnerlabs.com  7 
 Filter used to retrieve log: timestamp>="2019-08-22T00:00:00Z" AND protoPayload.authenticationInfo.principalEmail:hammerspace-1@csppartnerlabs.com
 Listing entries for logger cloudaudit.googleapis.com%2Factivity:
 Wrote logs to partner_activities_check.
 
 
-2. Second, check result witten to log partner_activities_check. if 0 is passed, script will check today's log. 
-mzhuo@minzhuo2:~/tmp$ ./lab_mon.py partner_activities_check  gkeoplabs-hammerspace-1 all  0 list  
-/usr/local/google/home/mzhuo/.local/lib/python2.7/site-packages/google/auth/_default.py:66: UserWarning: Your application has authenticated using end user credentials from Google Cloud SDK. We recommend that most server applications use service accounts instead. If your application continues to use end user credentials from Cloud SDK, you might receive a "quota exceeded" or "API not enabled" error. For more information about service accounts, see https://cloud.google.com/docs/authentication/
-  warnings.warn(_CLOUD_SDK_CREDENTIALS_WARNING)
+mzhuo@minzhuo2:~/tmp$ ./lab_mon.py partner_activities_check  gkeoplabs-hammerspace-1 all  0 
 Filter used to retrieve log: timestamp>="2019-08-29T00:00:00Z"
 Listing entries for logger partner_activities_check:
 * 2019-08-29T21:22:00.844311+00:00: Found 54 of log for mzhuo@google.com in the project gkeoplabs-hammerspace-1 for the last 7 days
@@ -26,3 +19,5 @@ Listing entries for logger partner_activities_check:
 * 2019-08-29T21:39:03.486306+00:00: For the last 7 days found 54 of log for mzhuo@google.com in the project gkeoplabs-hammerspace-1.
 * 2019-08-29T21:41:07.811768+00:00: For the last 7 days found 0 of log for hammerspace-1@csppartnerlabs.com in the project gkeoplabs-hammerspace-1.
 * 2019-08-29T21:42:55.449421+00:00: WARNING: For the last 7 days no log  found for hammerspace-1@csppartnerlabs.com in the project gkeoplabs-hammerspace-1.
+* 2019-08-29T22:08:05.349760+00:00: WARNING: For the last 7 days no log  found for hammerspace-1@csppartnerlabs.com in the project gkeoplabs-hammerspace-1.
+mzhuo@minzhuo2:~/tmp$ 
