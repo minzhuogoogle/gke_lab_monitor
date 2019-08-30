@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""The script is used to check cloud activities log for 
+"""The script is used to check cloud activities log for
 specified user.
 """
 
@@ -30,6 +30,17 @@ from google.cloud import logging
 PST_ZONE = timezone('US/Pacific')
 
 
+def gcp_auth(serviceacct):
+    # gcloud auth activate-service-account --key-file=release-reader-key.json
+    cmdline = 'gcloud auth activate-service-account --key-file={}'.format(serviceacct)
+    print cmdline
+    (retcode, retOuput) = RunCmd(cmdline, 15, None, wait=2, counter=3)
+    print retOuput
+    if retcode == 1:
+        print "Failure to run cmd {}".format(cmdline)
+    return retcode
+
+
 def write_entry(logger_name, project, number, user, window):
     """Writes log entries to the given logger."""
     logging_client = logging.Client()
@@ -37,18 +48,18 @@ def write_entry(logger_name, project, number, user, window):
     # This log can be found in the Cloud Logging console under 'Custom Logs'.
     logger = logging_client.logger(logger_name)
 
-    # Make a simple text log
-
     # Simple text log with severity.
     if number == 0:
          severity_status = "WARNING"
-         logger.log_text('WARNING: For the last {} days no log  found for {} in the project {}.'.format(window, user, project[0]), severity=severity_status)
+         logger_text = 'WARNING: For the last {} days no log  found for {} in the project {}.'.format(window, user, project[0])
     else:
          severity_status = "INFO"
-         logger.log_text('For the last {} days found {} of log for {} in the project {}.'.format(window, number, user, project[0]), severity=severity_status)
+         logger_text = 'For the last {} days found {} of log for {} in the project {}.'.format(window, number, user, project[0])
+    logger.log_text(logger_text, severity=severity_status)
 
 
     print('Wrote logs to {}.'.format(logger.name))
+    print("logging: {}".format(logger_text))
 
 
 def list_entries(logger_name, project, user, window):
@@ -57,7 +68,7 @@ def list_entries(logger_name, project, user, window):
     logger = logging_client.logger(logger_name)
     FILTER = 'protoPayload.authenticationInfo.principalEmail:{}'.format(user)
     mydate = datetime.now(PST_ZONE)
-    mydate = mydate -  timedelta(days = window)
+    mydate = mydate - timedelta(days = window)
     start_date = str(mydate).split(' ')[0]
     if not user == 'all':
         FILTER =  'timestamp>="{}T00:00:00Z" AND protoPayload.authenticationInfo.principalEmail:{}'.format(start_date, user)
