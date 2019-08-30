@@ -5,7 +5,7 @@ Upon finish the script writes a one-line log to log named as "partner_activities
 The script can be used to check cloud activity for particular user in specified time duration.
 
 # Prerequisite
-Before running the script make sure to install Google Cloud SDK.
+Before running the script make sure to install Google Cloud SDK, please refer to https://cloud.google.com/sdk/docs/quickstart-linux.
 This script needs to import logging library. To install logging library, run:
             pip install google-cloud-logging 
             
