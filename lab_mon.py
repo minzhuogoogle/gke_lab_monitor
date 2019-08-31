@@ -21,9 +21,7 @@ specified user.
 import argparse
 import time
 from datetime import datetime, timedelta, date
-from datetime_truncate import truncate
-from pytz import timezone
-import pytz
+
 
 from google.cloud import logging
 import errno
@@ -537,7 +535,6 @@ def RunCmd(cmd, timeout, output_file=None, wait=2, counter=0, **kwargs):
 
 
 
-PST_ZONE = timezone('US/Pacific')
 
 
 def gcp_auth(serviceacct):
@@ -572,7 +569,7 @@ def write_entry(logger_name, project, number, user, window):
     print("logging: {}".format(logger_text))
 
 def compose_log_filter(logger_name, user, window, addfilter=None):
-    mydate = datetime.now(PST_ZONE)
+    mydate = datetime.now()
     mydate = mydate - timedelta(days = window)
     start_date = str(mydate).split(' ')[0]
 
