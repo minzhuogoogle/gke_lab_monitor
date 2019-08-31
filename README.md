@@ -1,12 +1,12 @@
 # Description
 This script checks stackdrive log with user-defined filter. 
-Upon finish the script writes a one-line log to log named as "partner_activities_check" regarding how many logs found. ter 
+Upon finishing the script writes a one-line log to log "partner_activities_check" regarding how many logs found.
 
 # Function
 * Script supports two modes, gcloud and gclient. By default gcloud mode is used, if desired use "-gclient" to enable gclient mode.
 * Script supports filtering, the following filters are supported
   - user
-  - the duration of tie windows
+  - the duration of the windows
   - logName
 * Script supports customized filter. Use "-logfiler" to add more filters.  
 
