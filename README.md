@@ -63,7 +63,7 @@ result:
 Created log entry.
 
 The log written can be found in GCP project console.
-![Image description](link-to-image)
+![Image description]https://github.com/minzhuogoogle/gke_lab_monitor/blob/master/Screen%20Shot%202019-08-30%20at%2010.20.11%20PM.png
 
 # Env Preparation before running script
 The following steps was tested on "Linux linux-ws 4.15.0-1036-gcp #38-Ubuntu SMP Mon Jun 24 13:49:05 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux".
