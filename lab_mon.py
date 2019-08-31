@@ -19,11 +19,6 @@ specified user.
 """
 
 import argparse
-import time
-from datetime import datetime, timedelta, date
-
-
-from google.cloud import logging
 import errno
 import importlib
 import random
@@ -39,11 +34,10 @@ import threading
 import time
 import tty
 
+from datetime import datetime, timedelta, date
+from google.cloud import logging
 
-VERSION = "1.0.2"
-
-test_results = []
-test_cfg = {}
+VERSION = "1.0.1"
 
 RED   = "\033[1;31m"
 BLUE  = "\033[1;34m"
@@ -52,7 +46,6 @@ GREEN = "\033[0;32m"
 RESET = "\033[0;0m"
 BOLD    = "\033[;1m"
 REVERSE = "\033[;7m"
-
 
 
 # define convenient aliases for subprocess constants
