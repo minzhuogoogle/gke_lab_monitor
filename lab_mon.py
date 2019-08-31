@@ -479,10 +479,12 @@ def write_entry(logger_name, project, number, user, window):
     # Simple text log with severity.
     if number == 0:
          severity_status = "WARNING"
-         logger_text = 'WARNING: For the last {} days no log  found for {} in the project {}.'.format(window, user, project[0])
+         logger_text = 'WARNING: For the last {} days no log found for {} in the project {} for log {} ( additional filter = {} ).'.format(window, user, project[0], logger_name, logging_filter)
+         
     else:
          severity_status = "INFO"
-         logger_text = 'For the last {} days found {} of log for {} in the project {}.'.format(window, number, user, project[0])
+         logger_text = 'For the last {} days found {} of log for {} in the project {} for log {} (aditional filter = {} ) .'.format(window, int(retOutput), user, project[0], logger_name, logging_filter)
+         
     logger.log_text(logger_text, severity=severity_status)
 
 
@@ -555,10 +557,10 @@ def gcp_get_log_count(logger_name, project, user, window, addfilter=None):
 
     if int(retOutput) == 0:
         severity_status = "WARNING"
-        logger_text = 'WARNING: For the last {} days no log  found for {} in the project {}.'.format(window, user, project)
+        logger_text = 'WARNING: For the last {} days no log found for {} in the project {} for log {} ( additional filter = {} ).'.format(window, user, project, logger_name, logging_filter)
     else:
         severity_status = "INFO"
-        logger_text = 'For the last {} days found {} of log for {} in the project {}.'.format(window, int(retOutput), user, project)
+        logger_text = 'For the last {} days found {} of log for {} in the project {} for log {} (aditional filter = {} ) .'.format(window, int(retOutput), user, project, logger_name, logging_filter)
 
     gcp_write_log(write_logger_name, project, logger_text, severity_status)
 
