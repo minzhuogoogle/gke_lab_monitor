@@ -55,3 +55,17 @@ Command issued is still running, please wait......
 Command is finished.
 result: 
 Created log entry.
+
+# Env Preparation before running script
+The following steps was tested on "Linux linux-ws 4.15.0-1036-gcp #38-Ubuntu SMP Mon Jun 24 13:49:05 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux".
+ 1. Install python 
+    sudo apt install python  
+ 2. Install gcloud sdk
+   curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-260.0.0-linux-x86_64.tar.gz
+   tar zxvf google-cloud-sdk-260.0.0-linux-x86_64.tar.gz google-cloud-sdk
+   ./google-cloud-sdk/install.sh
+   source .bashrc
+ 3. install pip
+    sudo apt install python-pip
+ 4. install  google-cloud-logging
+     pip install google-cloud-logging
