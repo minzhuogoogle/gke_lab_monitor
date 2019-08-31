@@ -1,8 +1,14 @@
 # Description
-This script checks log in log named as "cloudaudit.googleapis.com%2Factivity" for particular user for the number of past days.
-Upon finish the script writes a one-line log to log named as "partner_activities_check" regarding how many logs found. 
+This script checks stackdrive log with user-defined filter. 
+Upon finish the script writes a one-line log to log named as "partner_activities_check" regarding how many logs found. ter 
 
-The script can be used to check cloud activity for particular user in specified time duration.
+# Function
+* Script supports two modes, gcloud and gclient. By default gcloud mode is used, if desired use "-gclient" to enable gclient mode.
+* Script supports filtering, the following filters are supported
+  - user
+  - the duration of tie windows
+  - logName
+* Script supports customized filter. Use "-logfiler" to add more filters.  
 
 # Prerequisite
 Before running the script make sure to install Google Cloud SDK, please refer to https://cloud.google.com/sdk/docs/quickstart-linux.
@@ -55,6 +61,9 @@ Command issued is still running, please wait......
 Command is finished.
 result: 
 Created log entry.
+
+The log written can be found in GCP project console.
+![Image description](link-to-image)
 
 # Env Preparation before running script
 The following steps was tested on "Linux linux-ws 4.15.0-1036-gcp #38-Ubuntu SMP Mon Jun 24 13:49:05 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux".
