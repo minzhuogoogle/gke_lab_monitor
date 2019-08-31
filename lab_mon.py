@@ -483,7 +483,7 @@ def write_entry(logger_name, project, number, user, window):
          
     else:
          severity_status = "INFO"
-         logger_text = 'For the last {} days found {} of log for {} in the project {} for log {} (aditional filter = {} ) .'.format(window, int(retOutput), user, project[0], logger_name, logging_filter)
+         logger_text = 'For the last {} days found {} of log for {} in the project {} for log {} (aditional filter = {} ) .'.format(window, number), user, project[0], logger_name, logging_filter)
          
     logger.log_text(logger_text, severity=severity_status)
 
