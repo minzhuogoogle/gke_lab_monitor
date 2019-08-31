@@ -417,36 +417,6 @@ def countdown(t, step=1, msg='sleeping'):
     print 'Done %s for %d seconds!  %s' % (msg, t, pad_str)
 
 
-def create_yaml_file_from_string(yaml_string, yaml_file):
-    try:
-        with open(yaml_file, 'w') as writer:
-            writer.write(yaml_string)
-    except EnvironmentError:
-        print 'Oops: open file {} for write fails.'.format(yaml_file)
-        sys.exit()
-    return yaml_file    
-
-
-def delete_yaml_files(userclusters):
-    for usercluster in userclusters:
-        workloadyaml = '{}.nginx.yaml'.format(usercluster.clustername)
-        patchnodeyaml = "{}.patch.node.yaml".format(usercluster.clustername)
-        exists = os.path.isfile(workloadyaml)
-        if exists:
-            try:
-                os.remove(workloadyaml)
-            except EnvironmentError:
-                print 'Oops: delete yaml file fails.'
-                sys.exit()
-        exists = os.path.isfile(patchnodeyaml)
-        if exists:
-            try:
-                os.remove(patchnodeyaml)
-            except EnvironmentError:
-                print 'Oops: delete yaml file fails.'
-                sys.exit()
-
-
 def send_log_to_stdout():
     root = logging.getLogger()
     root.setLevel(logging.DEBUG)
@@ -455,43 +425,6 @@ def send_log_to_stdout():
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     root.addHandler(handler)
-
-
-def env_prepare():
-    retcode = 1
-    retOutput = ""
-    cmdline =  "sudo apt list --installed"
-    try:
-        (retcode, retOutput) = RunCmd(cmdline, 15, None, wait=2, counter=3)
-    except:
-        retOutput = ""
-    if not "apache2-utils" in retOutput:
-        package_install_cli = 'sudo apt-get install apache2-utils -y'
-        try:
-            (retcode, retOutput) = RunCmd(package_install_cli, 15, None, wait=2, counter=3)
-        except:
-            print "Fail to install package. Please check package apache2-utils is installed."
-            print "Use {} to install package".format(package_install_cli)
-            print "Output for cmdline {}: {}".format(package_install_cli, retOutput)
-            countdown(2)
-        if retcode == 1:
-            print "Fail to install package. Please check package apache2-utils is installed."
-            print "Use {} to install package".format(package_install_cli)
-            print "Output for cmdline {}: {}".format(package_install_cli, retOutput)
-            countdown(2)
-
-def env_check():
-    cmdline = "kubectl --help"
-    (retcode, retOuput) = RunCmd(cmdline, 15, None, wait=2, counter=3)
-    if retcode == 1:
-        print "Fail to run kubectl. Kubectl is required to run the test script."
-        print "Please refer to https://kubernetes.io/docs/tasks/tools/install-kubectl/ to install kubectl"
-        sys.exit()
-    cmdline = "gkectl --help"
-    (retcode, retOuput) = RunCmd(cmdline, 15, None, wait=2, counter=3)
-    if retcode == 1:
-        print "Fail to run gkectl. gkectl is required to run the test script."
-        sys.exit()
 
 
 class CommandFailError(Exception):
@@ -530,11 +463,6 @@ def RunCmd(cmd, timeout, output_file=None, wait=2, counter=0, **kwargs):
   if rc == 0:
     return (0, err and out + '\n' + err or out)
   return (rc, err)
-
-
-
-
-
 
 
 def gcp_auth(serviceacct):
