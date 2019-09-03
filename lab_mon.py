@@ -53,6 +53,10 @@ REVERSE = "\033[;7m"
 PIPE = subprocess.PIPE
 STDOUT = subprocess.STDOUT
 PTY = -3
+DAYSLEEP = 36000
+PAUSE = 60
+TIMEFORMAT = "%m-%d-%Y %H:%M:%S"
+test_args = {}
 
 
 class Error(Exception):
@@ -571,6 +575,12 @@ def gcp_get_log_count(logger_name, project, user, window, addfilter=None):
 
     return int(retOutput)
 
+def retrieve_log():
+    if test_args['gclient']:
+        list_entries(test_args['logger_name'], test_args['project'], test_args['user'], test_args['window'], test_args['logfilter'])
+    else:
+        gcp_get_log_count(test_args['logger_name'], test_args['project'], test_args['user'], test_args['window'], test_args['logfilter'])
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -581,13 +591,31 @@ if __name__ == '__main__':
     parser.add_argument('-window', '--window', dest='window', help='number of days to inspect logs', type=int, default=0)
     parser.add_argument('-serviceacct', '--serviceacct', dest='serviceacct', help='Google Cloud service account', type=str, default=None)
     parser.add_argument('-gclient', '--gclient', dest='gclient', help='flag to use gclient to retrieve log or not', action='store_true', default=False)
+    parser.add_argument('-forever', '--forever', dest='forever', help='flag to run script forever or not, by default, it is set to False', action='store_true', default=False)
+
 
     args = parser.parse_args()
+    test_args['logger_name'] = args.logger_name
+    test_args['project'] = args.project
+    test_args['user'] = args.user
+    test_args['logfilter'] = args.logfilter
+    test_args['window'] = int(args.window)
+    test_args['serviceacct'] = args.serviceacct
+    test_args['gclient'] = args.gclient
+    test_args['forever'] = args.forever
 
-    if not args.serviceacct == None:
-        if gcp_auth(args.serviceacct) == 1:
-            print "Fail to activate GCP service acct {}.".format(serviceacct)
-    if args.gclient:
-        list_entries(args.logger_name, args.project, args.user, int(args.window), args.logfilter)
-    else:
-        gcp_get_log_count(args.logger_name, args.project, args.user, int(args.window), args.logfilter)
+
+    if not test_args['serviceacct']== None:
+        if gcp_auth(test_args['serviceacct']) == 1:
+            print "Fail to activate GCP service acct {}.".format(test_args['serviceacct'])
+
+    retrieve_log()
+
+    while test_args['forever']:
+        today = datetime.now().strftime(TIMEFORMAT)
+        midnight = "[0-9]+\-[0-9]+\-20[0-9]+\s(07\:[0-9]+\:[0-9]+)"
+        if re.match(midnight, today):
+            print 'Start checking log for {}'.format(today)
+            retrieve_log()
+            time.sleep(DAYSLEEP)
+        time.sleep(PAUSE)
