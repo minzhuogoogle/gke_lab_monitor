@@ -54,7 +54,9 @@ PIPE = subprocess.PIPE
 STDOUT = subprocess.STDOUT
 PTY = -3
 DAYSLEEP = 36000
-PAUSE = 60
+PAUSE = 1800
+
+
 TIMEFORMAT = "%m-%d-%Y %H:%M:%S"
 test_args = {}
 
@@ -462,41 +464,6 @@ def RunCmd(cmd, timeout, output_file=None, wait=2, counter=0, **kwargs):
   return (rc, err)
 
 
-def gcp_auth(serviceacct):
-    # gcloud auth activate-service-account --key-file=release-reader-key.json
-    cmdline = 'gcloud auth activate-service-account --key-file={}'.format(serviceacct)
-    print cmdline
-    (retcode, retOuput) = RunCmd(cmdline, 15, None, wait=2, counter=3)
-    print retOuput
-    if retcode == 1:
-        print "Failure to run cmd {}".format(cmdline)
-    return retcode
-
-
-def write_entry(logger_name, project, number, user, window, logging_filter):
-    """Writes log entries to the given logger."""
-    logging_client = logging.Client()
-
-    # This log can be found in the Cloud Logging console under 'Custom Logs'.
-    logger = logging_client.logger(logger_name)
-    # Simple text log with severity.
-    if user == None:
-        user = 'All'
-    if window == 0:
-        window = 'current'
-
-    if number == 0:
-         severity_status = "WARNING"
-         logger_text = 'WARNING: For the last {} days no log found for {} in the project {} for log {} ( additional filter = {} ).'.format(window, user, project[0], logger_name, logging_filter)
-    else:
-         severity_status = "INFO"
-         logger_text = 'For the last {} days found {} of log for {} in the project {} for log {} (aditional filter = {} ) .'.format(window, number, user, project[0], logger_name, logging_filter)
-    logger.log_text(logger_text, severity=severity_status)
-
-
-    print('Wrote logs to {}.'.format(logger.name))
-    print("logging: {}".format(logger_text))
-
 def compose_log_filter(logger_name, user, window, addfilter=None):
     mydate = datetime.now()
     mydate = mydate - timedelta(days = window)
@@ -512,7 +479,44 @@ def compose_log_filter(logger_name, user, window, addfilter=None):
 
     if not addfilter == None:
         logging_filter  = '{} AND {}'.format(logging_filter, addfilter)
+
     return  logging_filter
+
+
+def compose_log_result(logger_name, project, number, user, window, logging_filter):
+    if user == None:
+        user = 'All'
+    if window == 0:
+        window = 'current'
+    if number == 0:
+        severity_status = "WARNING"
+        logger_text = 'WARNING: For the last {} day(s) no log found for user {} in the project {} for log {} ( Filter = {} ).'.format(window, user, project, logger_name, logging_filter)
+    else:
+        severity_status = "INFO"
+        logger_text = 'For the last {} day(s) found {} of log(s) for user {} in the project {} for log {} ( Filter = {} ) .'.format(window, number, user, project, logger_name, logging_filter)
+    return logger_text, severity_status
+
+
+def gcp_auth(serviceacct):
+    cmdline = 'gcloud auth activate-service-account --key-file={}'.format(serviceacct)
+    print cmdline
+    (retcode, retOuput) = RunCmd(cmdline, 15, None, wait=2, counter=3)
+    print retOuput
+    if retcode == 1:
+        print "Failure to run cmd {}".format(cmdline)
+    return retcode
+
+
+def write_entry(logger_name, logger_text, severity_status):
+    """Writes log entries to the given logger."""
+    logging_client = logging.Client()
+
+    logger = logging_client.logger(logger_name)
+    logger.log_text(logger_text, severity=severity_status)
+
+    print('Wrote logs to {}.'.format(logger.name))
+    print("logging: {}".format(logger_text))
+
 
 def list_entries(logger_name, project, user, window, addfilter=None):
     """Lists the most recent entries for a given logger."""
@@ -536,8 +540,10 @@ def list_entries(logger_name, project, user, window, addfilter=None):
               (timestamp, entry.payload))
         count += 1
     write_logger_name = "partner_activities_check"
+    logger_text, severity_status = compose_log_result(logger_name, project, count, user, window, logging_filter)
+
     if not logger_name == write_logger_name:
-        write_entry(write_logger_name, projectlist, count, user, window, addfilter)
+        write_entry(write_logger_name, logger_text, severity_status)
 
 
 def gcp_write_log(logger_name, project, logtext, logseverity):
@@ -553,27 +559,17 @@ def gcp_get_log_count(logger_name, project, user, window, addfilter=None):
     # gcloud logging read 'timestamp>="2019-08-30T00:00:00Z" AND protoPayload.authenticationInfo.principalEmail:mzhuo@google.com AND logName:projects/gkeoplabs-hammerspace-1/logs/cloudaudit.googleapis.com%2Factivity' --project=gkeoplabs-hammerspace-1  | grep insertId | wc -l
     logging_filter = compose_log_filter(logger_name, user, window, addfilter)
     print "Filter used to retrieve log: {}".format(logging_filter)
-
     cmdline = 'gcloud logging read \'{}\' --project={} | grep insertId | wc -l'.format(logging_filter, project)
     print cmdline
     (retcode, retOutput) = RunCmd(cmdline, 120, None, wait=120, counter=3)
     print  "result: {}".format(retOutput)
 
     write_logger_name = "partner_activities_check"
-    if user == None:
-        user = 'All'
-    if window == 0:
-        window = 'current'
-    if int(retOutput) == 0:
-        severity_status = "WARNING"
-        logger_text = 'WARNING: For the last {} day(s) no log found for user {} in the project {} for log {} ( additional filter = {} ).'.format(window, user, project, logger_name, logging_filter)
-    else:
-        severity_status = "INFO"
-        logger_text = 'For the last {} day(s) found {} of log(s) for user {} in the project {} for log {} (aditional filter = {} ) .'.format(window, int(retOutput), user, project, logger_name, logging_filter)
-
+    logger_text, severity_status = compose_log_result(logger_name, project,  int(retOutput), user, window, logging_filter)
     gcp_write_log(write_logger_name, project, logger_text, severity_status)
 
     return int(retOutput)
+
 
 def retrieve_log():
     if test_args['gclient']:
