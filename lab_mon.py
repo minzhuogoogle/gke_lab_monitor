@@ -562,13 +562,17 @@ def gcp_get_log_count(logger_name, project, user, window, addfilter=None):
     cmdline = 'gcloud logging read \'{}\' --project={} | grep insertId | wc -l'.format(logging_filter, project)
     print cmdline
     (retcode, retOutput) = RunCmd(cmdline, 120, None, wait=120, counter=3)
-    print  "result: {}".format(retOutput)
+    if retcode ==0:
+        print  "result: {}".format(retOutput)
+    else:
+      retOutput=0
 
     write_logger_name = "partner_activities_check"
     logger_text, severity_status = compose_log_result(logger_name, project,  int(retOutput), user, window, logging_filter)
     gcp_write_log(write_logger_name, project, logger_text, severity_status)
 
-    return int(retOutput)
+    
+    return int(retOutput.split('\n')[0])
 
 
 def retrieve_log():
@@ -605,8 +609,7 @@ if __name__ == '__main__':
         if gcp_auth(test_args['serviceacct']) == 1:
             print "Fail to activate GCP service acct {}.".format(test_args['serviceacct'])
 
-    if not test_args['forever']:
-        retrieve_log()
+    retrieve_log()
 
     while test_args['forever']:
         today = datetime.now().strftime(TIMEFORMAT)
