@@ -605,7 +605,8 @@ if __name__ == '__main__':
         if gcp_auth(test_args['serviceacct']) == 1:
             print "Fail to activate GCP service acct {}.".format(test_args['serviceacct'])
 
-    retrieve_log()
+    if not test_args['forever']:
+        retrieve_log()
 
     while test_args['forever']:
         today = datetime.now().strftime(TIMEFORMAT)
