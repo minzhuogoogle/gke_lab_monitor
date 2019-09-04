@@ -1,5 +1,5 @@
 #! /bin/bash
-gcloud config set account 17851170406-compute@developer.gserviceaccount.com
+
 sudo mkdir -p /home/tmp
 cd /home/tmp
 sudo rm *.py
