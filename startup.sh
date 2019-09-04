@@ -1,6 +1,7 @@
 #! /bin/bash
 sudo apt install python -y
 sudo curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-260.0.0-linux-x86_64.tar.gz
+sudo tar zxvf google-cloud-sdk-260.0.0-linux-x86_64.tar.gz google-cloud-sdk
 ./google-cloud-sdk/install.sh --quiet
 source .bashrc
 
