@@ -1,12 +1,14 @@
 #! /bin/bash
-
+project=$1
+useraccount=$2
+window=$3
 sudo mkdir -p /home/tmp
 cd /home/tmp
 sudo rm *.*
 sudo curl -OL https://raw.githubusercontent.com/minzhuogoogle/gke_lab_monitor/master/lab_mon.py
 sudo sync
 sudo chmod +x lab_mon.py
-sudo /home/tmp/lab_mon.py -logger_name cloudaudit.googleapis.com%2Factivity -project csp-gke-231805 -window 7 -user mzhuo@google.com
+sudo /home/tmp/lab_mon.py -logger_name cloudaudit.googleapis.com%2Factivity -project $project -window 7 -user mzhuo@google.com
 sudo /home/tmp/lab_mon.py -logger_name cloudaudit.googleapis.com%2Factivity -project csp-gke-231805 -window 7 -user mzhuo@google.com -gclient
 sudo /home/tmp/lab_mon.py -logger_name cloudaudit.googleapis.com%2Factivity -project csp-gke-231805 -window 7 -user min.zhuo@gmail.com
 sudo /home/tmp/lab_mon.py -logger_name cloudaudit.googleapis.com%2Factivity -project csp-gke-231805 -window 7 -user min.zhuo@gmail.com -gclient
