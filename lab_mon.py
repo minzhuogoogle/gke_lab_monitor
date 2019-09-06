@@ -35,7 +35,7 @@ import time
 import tty
 
 from datetime import datetime, timedelta, date
-from google.cloud import logging
+
 
 VERSION = "1.0.1"
 
@@ -604,6 +604,8 @@ if __name__ == '__main__':
     test_args['gclient'] = args.gclient
     test_args['forever'] = args.forever
 
+    if test_args['gclient']:
+        from google.cloud import logging         
 
     if not test_args['serviceacct']== None:
         if gcp_auth(test_args['serviceacct']) == 1:
