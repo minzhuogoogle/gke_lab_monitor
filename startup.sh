@@ -5,8 +5,9 @@ sudo tar zxvf google-cloud-sdk-260.0.0-linux-x86_64.tar.gz google-cloud-sdk
 sudo ./google-cloud-sdk/install.sh --quiet
 source ~/.bashrc
 
-sudo apt install python-pip -y
-pip install google-cloud-logging
+# To use gclient mode "google-cloud-logging" is required.
+#sudo apt install python-pip -y
+#pip install google-cloud-logging
 
 project=$1
 useraccount=$2
